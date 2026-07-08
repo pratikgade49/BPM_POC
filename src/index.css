@@ -39,6 +39,147 @@ button {
   background: var(--surface);
 }
 
+/* ---------- Landing page ---------- */
+
+.landing-page {
+  display: grid;
+  grid-template-columns: 1.4fr 0.8fr;
+  gap: 24px;
+  padding: 36px;
+  height: 100%;
+  background: linear-gradient(135deg, #f8faff 0%, #ffffff 100%);
+}
+
+.landing-hero,
+.landing-panel-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 12px 36px rgba(15, 23, 42, 0.05);
+}
+
+.landing-hero {
+  padding: 36px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.landing-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: flex-start;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.landing-hero h1 {
+  margin: 16px 0 10px;
+  font-size: 34px;
+  line-height: 1.15;
+  color: var(--ink);
+}
+
+.landing-hero p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--ink-muted);
+  max-width: 620px;
+}
+
+.landing-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.landing-actions .tbtn {
+  padding-inline: 14px;
+}
+
+.landing-highlights {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.landing-card {
+  display: flex;
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #fcfcfd;
+}
+
+.landing-card strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 13px;
+  color: var(--ink);
+}
+
+.landing-card p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--ink-muted);
+}
+
+.landing-panel {
+  display: flex;
+  align-items: center;
+}
+
+.landing-panel-card {
+  padding: 24px;
+  width: 100%;
+}
+
+.landing-panel-card h2 {
+  margin: 0 0 10px;
+  font-size: 18px;
+}
+
+.landing-panel-card p {
+  margin: 0 0 12px;
+  color: var(--ink-muted);
+  line-height: 1.6;
+}
+
+.landing-auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.role-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.tbtn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
 /* ---------- Toolbar ---------- */
 
 .toolbar {

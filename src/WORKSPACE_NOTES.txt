@@ -1,0 +1,1 @@
+Temp notes: awaiting confirmation details for admin popup mode (A vs B) and localStorage fallback. Previous ask_followup_question received answer: 'yes' (unclear which option).
