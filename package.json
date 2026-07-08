@@ -1,0 +1,25 @@
+{
+  "name": "bpm-poc",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@bpmn-io/properties-panel": "^3.24.4",
+    "bpmn-js": "^17.11.1",
+    "bpmn-js-properties-panel": "^5.24.0",
+    "dagre": "^0.8.5",
+    "lucide-react": "^0.383.0",
+    "papaparse": "^5.4.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.2.1",
+    "vite": "^5.2.0"
+  }
+}
