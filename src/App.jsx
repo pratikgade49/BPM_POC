@@ -242,6 +242,11 @@ export default function App() {
     }
 
     if (!window.confirm('Discard the current diagram and start a new one?')) return
+    // Starting a brand-new process in the UI should create a new backend record (POST),
+    // not attempt to update an existing process (PUT).
+    setActiveProcessId(null)
+    setProcessName('Untitled process')
+
     await modelerRef.current.importXML(EMPTY_DIAGRAM)
     modelerRef.current.get('canvas').zoom('fit-viewport')
     setStatusMsg('New diagram created')
@@ -298,14 +303,89 @@ export default function App() {
     }
   }
 
-  const handleExportSVG = async () => {
+  const handleExportPDF = async () => {
     try {
+      if (!modelerRef.current) return
+
+      const canvas = modelerRef.current.get('canvas')
+
+      // Ensure the diagram is laid out and visible
+      try {
+        canvas.zoom('fit-viewport')
+      } catch {
+        // ignore
+      }
+
+      // Render to a high-resolution PNG and embed into a 1-page PDF.
+      // This avoids brittle SVG->PDF conversions.
       const { svg } = await modelerRef.current.saveSVG()
-      downloadFile(`${processName || 'process'}.svg`, svg, 'image/svg+xml')
-      setStatusMsg('SVG exported')
+
+      // Convert SVG -> canvas image -> PNG
+      const svgBlob = new Blob([svg], { type: 'image/svg+xml;charset=utf-8' })
+      const url = URL.createObjectURL(svgBlob)
+
+      const img = new Image()
+      img.decoding = 'async'
+
+      await new Promise((resolve, reject) => {
+        img.onload = () => resolve()
+        img.onerror = (e) => reject(e)
+        img.src = url
+      })
+
+      URL.revokeObjectURL(url)
+
+      // High DPI render
+      const scale = 2.5
+      const width = Math.max(1, img.width || 1200)
+      const height = Math.max(1, img.height || 800)
+
+      const renderCanvas = document.createElement('canvas')
+      renderCanvas.width = Math.floor(width * scale)
+      renderCanvas.height = Math.floor(height * scale)
+      const ctx = renderCanvas.getContext('2d')
+
+      if (!ctx) throw new Error('Failed to create canvas')
+
+      ctx.setTransform(scale, 0, 0, scale, 0, 0)
+      ctx.fillStyle = '#ffffff'
+      ctx.fillRect(0, 0, width, height)
+      ctx.drawImage(img, 0, 0)
+
+      const pngDataUrl = renderCanvas.toDataURL('image/png')
+
+      // Lazy-load jsPDF to avoid adding dependency errors at startup.
+      const mod = await import('jspdf')
+      const jsPDF = mod.default
+
+      // Letter size: 612x792 pt-ish. jsPDF uses mm by default.
+      const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' })
+
+      const pageWidth = pdf.internal.pageSize.getWidth()
+      const pageHeight = pdf.internal.pageSize.getHeight()
+
+      // Convert image pixels to mm while keeping aspect ratio
+      // Use the rendered canvas size as reference.
+      const imgW = renderCanvas.width
+      const imgH = renderCanvas.height
+      const ratio = imgW / imgH
+
+      let targetW = pageWidth - 20
+      let targetH = targetW / ratio
+      if (targetH > pageHeight - 20) {
+        targetH = pageHeight - 20
+        targetW = targetH * ratio
+      }
+
+      const x = (pageWidth - targetW) / 2
+      const y = (pageHeight - targetH) / 2
+
+      pdf.addImage(pngDataUrl, 'PNG', x, y, targetW, targetH, undefined, 'FAST')
+      pdf.save(`${processName || 'process'}.pdf`)
+      setStatusMsg('PDF exported')
     } catch (err) {
       console.error(err)
-      setStatusMsg('SVG export failed', 'error')
+      setStatusMsg(err?.message || 'PDF export failed', 'error')
     }
   }
 
@@ -437,6 +517,8 @@ export default function App() {
                     const me = await apiMe(auth.accessToken)
                     setAuth((a) => ({ ...a, me }))
                     setScreen('workspace')
+                    setHasLoadedWorkspaceOnce(false)
+                    setActiveProcessId(null)
                     setStatusMsg('Logged in')
                   } catch {
                     clearTokens()
@@ -785,7 +867,7 @@ export default function App() {
 
                 <div className="tgroup">
                   <ToolbarButton icon={FileCode} label="Export BPMN" onClick={handleExportXML} variant="primary" />
-                  <ToolbarButton icon={ImageIcon} label="Export SVG" onClick={handleExportSVG} />
+                  <ToolbarButton icon={ImageIcon} label="Export PDF" onClick={handleExportPDF} />
                 </div>
               </div>
             </div>
