@@ -1,0 +1,16 @@
+.bpm-painter-overlay{
+  position:absolute;
+  /* Keep painter overlay below app modals. BPMN editor layers can float above our layout,
+     so ensure this doesn't compete with modal stacking. */
+  z-index:20;
+  pointer-events:auto;
+  background:rgba(255,255,255,0.92);
+  border:1px solid var(--border);
+  border-radius:10px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.08);
+  backdrop-filter:blur(6px);
+  padding:10px;
+  width:140px;
+}
+
+

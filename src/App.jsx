@@ -915,7 +915,7 @@ export default function App() {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                zIndex: 50,
+                zIndex: 110,
               }}
             >
               <div
@@ -1010,7 +1010,8 @@ export default function App() {
           )}
 
           {isAdmin && (
-            <div style={{ position: 'fixed', bottom: 78, right: 18, zIndex: 10 }}>
+            <div style={{ position: 'fixed', bottom: 78, right: 18, zIndex: 5 }}>
+
               <button
                 className="tbtn tbtn-primary"
                 type="button"
@@ -1036,7 +1037,7 @@ export default function App() {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                zIndex: 60,
+                zIndex: 111,
               }}
             >
               <div

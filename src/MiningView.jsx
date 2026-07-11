@@ -239,7 +239,7 @@ function DfgDiagram({ layout }) {
   )
 }
 
-export default function MiningView({ modelTaskNames, onStatus }) {
+export default function MiningView({ modelTaskNames, onStatus, onApplyColoring }) {
   const fileInputRef = useRef(null)
   const [rawRows, setRawRows] = useState(null)
   const [headers, setHeaders] = useState([])
@@ -375,6 +375,21 @@ export default function MiningView({ modelTaskNames, onStatus }) {
 
       {analysis && !analysis.error && (
         <>
+          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
+            <button
+              className="tbtn tbtn-ghost"
+              type="button"
+              onClick={() => onApplyColoring?.(analysis)}
+              disabled={!modelTaskNames?.length}
+              title={modelTaskNames?.length ? 'Color modeled tasks using activity frequency' : 'No model tasks found in current diagram'}
+            >
+              <span>Color tasks by frequency</span>
+            </button>
+            <span style={{ fontSize: 12.5, color: 'var(--ink-muted)' }}>
+              Applies heat colors to matching BPMN Task names.
+            </span>
+          </div>
+
           <div className="stat-row">
             <div className="stat-card">
               <span className="stat-value">{analysis.caseCount}</span>
